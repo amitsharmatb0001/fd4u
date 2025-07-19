@@ -1,58 +1,99 @@
-import 'package:fd4u/utils/colors.dart';
-import 'package:fd4u/widgets/small_text.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/dimensions.dart';
+// Assuming these are your project's custom files.
+// Make sure the paths are correct.
+import 'package:fd4u/utils/colors.dart';
+import 'package:fd4u/utils/dimensions.dart';
+import 'package:fd4u/widgets/small_text.dart';
 
 class ExpandableTextWidget extends StatefulWidget {
   final String text;
-  const ExpandableTextWidget({Key? key, required this.text}) :super(key: key);
+  const ExpandableTextWidget({Key? key, required this.text}) : super(key: key);
 
   @override
   _ExpandableTextWidgetState createState() => _ExpandableTextWidgetState();
 }
 
 class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
-  late String firstHalf;
-  late String secondHalf;
+  bool isExpanded = false;
 
-  bool hiddenText = true;
-  double textHeight = Dimensions.screenHeight/5.63;
-
-  @override
-  void initState() {
-
-    super.initState();
-    if(widget.text.length>textHeight){
-      firstHalf = widget.text.substring(0,textHeight.toInt());
-      secondHalf = widget.text.substring(textHeight.toInt()+1,widget.text.length);
-    }else{
-      firstHalf = widget.text;
-      secondHalf = "";
-    }
-  }
+  // The number of lines to show when the text is collapsed.
+  // You can change this value to 1, 3, etc. as you see fit.
+  final int collapsedLineCount = 2;
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      child: secondHalf.isEmpty?SmallText(color:AppColors.mainColor,size:Dimensions.font16,text: firstHalf):Column(
-        children: [
-          SmallText(height:1.8,color:AppColors.paraColor,size:Dimensions.font16,text: hiddenText?(firstHalf+"..."):(firstHalf+secondHalf)),
-          InkWell(
-            onTap: (){
-              setState(() {
-                hiddenText=!hiddenText;
-              });
-            },
-            child: Row(
-              children: [
-                SmallText(text: "show more", color: AppColors.mainColor,),
-                Icon(hiddenText?Icons.arrow_drop_down:Icons.arrow_drop_up,color: AppColors.mainColor,),
-              ],
+    // LayoutBuilder provides the constraints of the parent widget, which allows
+    // us to accurately measure the text layout.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // We use a TextPainter to determine if the text will exceed the
+        // collapsed line count within the available width.
+        final textSpan = TextSpan(
+          text: widget.text,
+          style: TextStyle(
+            fontSize: Dimensions.font16,
+            // This style should match the style used in your SmallText widget.
+          ),
+        );
+
+        final textPainter = TextPainter(
+          text: textSpan,
+          maxLines: collapsedLineCount,
+          textDirection: TextDirection.ltr,
+        );
+
+        textPainter.layout(maxWidth: constraints.maxWidth);
+
+        // This boolean tells us if the text is long enough to need a "Show more" button.
+        final bool isTextOverflowing = textPainter.didExceedMaxLines;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // This now correctly passes maxLines and overflow to your updated SmallText widget.
+            SmallText(
+              text: widget.text,
+              color: AppColors.paraColor,
+              size: Dimensions.font16,
+              height: 1.8,
+              // We conditionally set maxLines to control the collapsed/expanded state.
+              maxLines: isExpanded ? null : collapsedLineCount,
+              // Use ellipsis to indicate that the text is truncated.
+              overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
             ),
-          )
-        ],
-      ),
+
+            // The "Show more/less" button is only shown if the text is overflowing.
+            if (isTextOverflowing)
+              InkWell(
+                // Use a transparent splash color for a cleaner tap effect.
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Row(
+                    children: [
+                      SmallText(
+                        text: isExpanded ? "Show less" : "Show more",
+                        color: AppColors.mainColor,
+                        size: Dimensions.font16,
+                      ),
+                      Icon(
+                        isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                        color: AppColors.mainColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
