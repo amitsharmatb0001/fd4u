@@ -27,12 +27,12 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     pageController.addListener(() {
       setState(() {
         _currPageValue = pageController.page!;
-       // print("Current value is $_currPageValue");
+        // print("Current value is $_currPageValue");
       });
     });
   }
   @override
-void dispose(){
+  void dispose(){
     pageController.dispose();
   }
 
@@ -51,15 +51,36 @@ void dispose(){
                 return _buildPageItem(position);
               }),
         ),
-    new DotsIndicator(
-    dotsCount: 5,
-    position: _currPageValue,
-    decorator: DotsDecorator(
-    shape: const Border(),
-    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-    ),
-    ),
-   /*DotsIndicator(
+        DotsIndicator(
+          dotsCount: 5,
+          position: _currPageValue,
+          decorator: DotsDecorator(
+            colors: [
+              Colors.grey[300]!,
+              Colors.grey[400]!,
+              Colors.grey[500]!,
+              Colors.grey[600]!,
+              Colors.grey[700]!,
+            ],
+            activeColors: [
+              Colors.red[300]!,
+              Colors.red[400]!,
+              Colors.red[500]!,
+              Colors.red[600]!,
+              Colors.red[700]!,
+            ],
+          ),
+        ),
+
+        /*   new DotsIndicator(
+          dotsCount: 5,
+          position: _currPageValue,
+          decorator: DotsDecorator(
+            shape: const Border(),
+            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          ),
+        ),*/
+        /*DotsIndicator(
    dotsCount: 11,
     position: _currPageValue,
     decorator: DotsDecorator(
@@ -79,8 +100,8 @@ void dispose(){
               BigText(text: "popular"),
               SizedBox(width: Dimensions.width10,),
               Container(
-                margin: const EdgeInsets.only(bottom: 3),
-                child: BigText(text: "..",color: Colors.black26,)
+                  margin: const EdgeInsets.only(bottom: 3),
+                  child: BigText(text: "..",color: Colors.black26,)
               ),
               SizedBox(width: Dimensions.width10,),
               Container(
@@ -92,28 +113,28 @@ void dispose(){
         ),
         //list of food & image
 
-          ListView.builder(
+        ListView.builder(
             shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (context, index){
-                return Container(
-                  margin: EdgeInsets.only(left: Dimensions.width20,right: Dimensions.width20,bottom: Dimensions.height10),
-                  child: Row(
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 10,
+            itemBuilder: (context, index){
+              return Container(
+                margin: EdgeInsets.only(left: Dimensions.width20,right: Dimensions.width20,bottom: Dimensions.height10),
+                child: Row(
                     children: [
                       // showing image section
                       Container(
                         height: Dimensions.listViewImgSize,
                         width:Dimensions.listViewImgSize,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.radius20),
-                          color: Colors.white38,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/image/food2.png")
-                          )
+                            borderRadius: BorderRadius.circular(Dimensions.radius20),
+                            color: Colors.white38,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("assets/image/food2.png")
+                            )
                         ),
-                        ),
+                      ),
                       // showing text section
                       Expanded(
                         child: Container(
@@ -121,14 +142,14 @@ void dispose(){
 
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(Dimensions.radius20),
-                              bottomRight: Radius.circular(Dimensions.radius20)
+                                topRight: Radius.circular(Dimensions.radius20),
+                                bottomRight: Radius.circular(Dimensions.radius20)
                             ),
                             color: Colors.white,
 
-                            ),
+                          ),
                           child: Padding(
-                              padding:EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
+                            padding:EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -154,17 +175,17 @@ void dispose(){
                               ],
                             ),
                           ),
-                          ),
+                        ),
                       )
 
 
                     ]
-                  ),
-                );
+                ),
+              );
 
-          }),
+            }),
 
-        
+
       ],
     );
   }
@@ -181,7 +202,7 @@ void dispose(){
           (_currPageValue - index + 1) * (1 - _scaleFactor);
       var currTrans = _height * (1 - currScale) / 2;
       matrix = Matrix4.diagonal3Values(1,1,1);
-    matrix = Matrix4.diagonal3Values(1,1,1)..setTranslationRaw(0,currTrans,0);
+      matrix = Matrix4.diagonal3Values(1,1,1)..setTranslationRaw(0,currTrans,0);
     }
     else if(
     index == _currPageValue.floor()-1){
@@ -198,17 +219,17 @@ void dispose(){
       transform: matrix,
       child: Stack(
         children: [
-        Container(
-        height: Dimensions.pageViewContainer,
-        margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.radius30),
-            color: index.isEven?Color(0xffff1744):Color(0xff69c5df),
-            image: DecorationImage(
-                fit: BoxFit.cover,
-                image:AssetImage("assets/image/food1.png") )
-        ),
-      ),
+          Container(
+            height: Dimensions.pageViewContainer,
+            margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(Dimensions.radius30),
+                color: index.isEven?Color(0xffff1744):Color(0xff69c5df),
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image:AssetImage("assets/image/food1.png") )
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -217,21 +238,21 @@ void dispose(){
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.radius20),
                   color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xffe8e8e8),
-                    blurRadius: 5.0,
-                    offset: Offset(0,5)
-                  ),
-                  BoxShadow(
-                      color: Colors.white,
-                      offset: Offset(-5,0)
-                  ),
-                  BoxShadow(
-                      color: Colors.white,
-                    offset: Offset(5,0)
-                  )
-                ]
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0xffe8e8e8),
+                        blurRadius: 5.0,
+                        offset: Offset(0,5)
+                    ),
+                    BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(-5,0)
+                    ),
+                    BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(5,0)
+                    )
+                  ]
 
               ),
               child: Container(

@@ -19,7 +19,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
 
   // The number of lines to show when the text is collapsed.
   // You can change this value to 1, 3, etc. as you see fit.
-  final int collapsedLineCount = 2;
+  final int collapsedLineCount = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,9 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
             // This now correctly passes maxLines and overflow to your updated SmallText widget.
             SmallText(
               text: widget.text,
-              color: AppColors.paraColor,
+              // Conditionally change the color based on the expanded state.
+              // Assuming you have another color like 'AppColors.titleColor' or similar for the expanded text.
+              color: isExpanded ? AppColors.paraColor : AppColors.mainColor,
               size: Dimensions.font16,
               height: 1.8,
               // We conditionally set maxLines to control the collapsed/expanded state.

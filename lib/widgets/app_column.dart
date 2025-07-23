@@ -9,26 +9,28 @@ import 'icon_and_text_widget.dart';
 
 class AppColumn extends StatelessWidget {
   final String text;
-  const AppColumn({Key? key, required this.text }) : super(key: key);
+  const AppColumn({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
         BigText(text: text, size: Dimensions.font26,),
         SizedBox(height: Dimensions.height10,),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Wrap(
-              children: List.generate(5, (index) => Icon(Icons.star,color: AppColors.mainColor,)),
+              children: List.generate(5,(index) {return Icon(Icons.star, color:AppColors.mainColor,size: 15,);}),
             ),
+
             SizedBox(width: Dimensions.width10,),
             SmallText(text: "4.5"),
             SizedBox(width: Dimensions.width10,),
-            SmallText(text: "1287"),
+            SmallText(text: "500"),
             SizedBox(width: Dimensions.width10,),
             SmallText(text: "comments")
+
           ],
         ),
         SizedBox(height: Dimensions.height10,),
@@ -36,16 +38,18 @@ class AppColumn extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconAndTextWidget(icon: Icons.circle_sharp,
-              text: "normal",
-              iconColor: AppColors.iconColor,),
-            IconAndTextWidget(icon: Icons.location_on,
-              text: "1.7km",
-              iconColor: AppColors.mainColor,),
+                text: "normal",
+                iconColor: AppColors.iconColor),
+
+            IconAndTextWidget(icon: Icons.circle_sharp,
+                text: "5km",
+                iconColor: AppColors.mainColor),
+
             IconAndTextWidget(icon: Icons.access_time_rounded,
-              text: "32min",
-              iconColor: AppColors.iconColor2,),
+                text: "25min",
+                iconColor: AppColors.iconColor2)
           ],
-        ),
+        )
       ],
     );
   }
