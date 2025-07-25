@@ -1,36 +1,50 @@
+import 'package:fd4u/utils/app_constants.dart';
 import 'package:fd4u/utils/colors.dart';
 import 'package:fd4u/utils/dimensions.dart';
 import 'package:fd4u/widgets/app_icon.dart';
 import 'package:fd4u/widgets/big_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../controllers/recommended_product_controller.dart';
+import '../../routes/route_helper.dart';
 import '../../widgets/expandable_text_widget.dart';
 
 
 
 class RecommendedFoodDetail extends StatelessWidget {
-  const RecommendedFoodDetail({super.key});
+  final int pageId;
+
+  const RecommendedFoodDetail({super.key, required this.pageId});
 
   @override
   Widget build(BuildContext context) {
+    print("page id in recommended food detail is"+pageId.toString());
+    var product=Get.find<RecommendedProductController>().RecommendedProductList[pageId];
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 70,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.clear),
-                Icon(Icons.shopping_cart_outlined)
+                GestureDetector(
+                    onTap: (){
+                      Get.toNamed(RouteHelper.getInitial());
+                    },
+
+                    child: AppIcon(icon:Icons.clear)),
+                AppIcon(icon: Icons.shopping_cart_outlined)
 
               ],
             ),
             bottom: PreferredSize(preferredSize: Size.fromHeight(20),
                 child: Container(
-                   child:  Center(child: BigText(size:Dimensions.font26,text: "coffe"),),
+                   child:  Center(child: BigText(size:Dimensions.font26,text: product.name!),),
                     width: double.maxFinite,
                   padding: EdgeInsets.only(top: 5,bottom: 10),
                   decoration: BoxDecoration(
@@ -46,7 +60,8 @@ class RecommendedFoodDetail extends StatelessWidget {
             backgroundColor: AppColors.mainColor,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset("assets/image/food1.png",
+              background: Image.network(
+              AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!,
               width: double.maxFinite,
               fit: BoxFit.cover,
               ),
@@ -58,7 +73,7 @@ class RecommendedFoodDetail extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(left: 20,right: 20),
-                  child: ExpandableTextWidget(text: "Cold coffee is a beloved beverage, especially in warmer climates like India, where it offers a refreshing escape from the heat.Cold coffee is a beloved beverage, especially in warmer climates like India, where it offers a refreshing escape from the heat.Cold coffee is a beloved beverage, especially in warmer climates like India, where it offers a refreshing escape from the heat.It's the ideal companion for warm afternoons, a perfect pick-me-up during a busy day, or a delightful treat for moments of pure relaxation. From the simple elegance of a black iced coffee to the decadent luxury of a blended mocha frappe, cold coffee offers a versatile and utterly enjoyable experience for every coffee lover. Its coolness provides instant relief, while its caffeine kick gently energizes, making it a beloved choice for any time you crave a cool, comforting, and flavorful escape.It's the ideal companion for warm afternoons, a perfect pick-me-up during a busy day, or a delightful treat for moments of pure relaxation. From the simple elegance of a black iced coffee to the decadent luxury of a blended mocha frappe "),
+                  child: ExpandableTextWidget(text: product.description!),
     )
         ],
       )
@@ -77,7 +92,7 @@ class RecommendedFoodDetail extends StatelessWidget {
                     iconColor: Colors.white,
                     backgroundColor: AppColors.mainColor, 
                     iconSize: Dimensions.icon24,),
-                  BigText(text: "\₹ 100 "+" x "+" 0 ",color: AppColors.mainBlackColor,size: Dimensions.font26,),
+                  BigText(text: "\₹ ${product.price} x  0 ",color: AppColors.mainBlackColor,size: Dimensions.font26,),
                   AppIcon(icon: Icons.add,
                     iconColor: Colors.white,
                     backgroundColor: AppColors.mainColor,

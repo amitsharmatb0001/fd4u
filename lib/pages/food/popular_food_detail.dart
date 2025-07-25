@@ -2,18 +2,27 @@ import 'package:fd4u/widgets/app_column.dart';
 import 'package:fd4u/widgets/app_icon.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../controllers/popular_product_controller.dart';
+import '../../utils/app_constants.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/big_text.dart';
 import '../../widgets/expandable_text_widget.dart';
+import '../home/main_food_page.dart';
 
 
 class PopularFoodDetail extends StatelessWidget {
-  const PopularFoodDetail({super.key});
+ final  int pageId;
+   const PopularFoodDetail({super.key, required this.pageId});
 
   @override
   Widget build(BuildContext context) {
+    var product=Get.find<PopularProductController>().popularProductList[pageId];
+    print("page id"+pageId.toString());
+    print("product name"+product.name.toString());
+    Get.find<PopularProductController>().initProduct();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -27,7 +36,9 @@ class PopularFoodDetail extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage("assets/image/food1.png")
+                  image: NetworkImage(
+                    AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!
+                  )
                 )
               ),
             ),
@@ -39,7 +50,12 @@ class PopularFoodDetail extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppIcon(icon: Icons.arrow_back_ios_new),
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(()=>MainFoodPage());
+                             },
+
+                      child: AppIcon(icon: Icons.arrow_back_ios_new)),
                   SizedBox(width: Dimensions.width20,),
                   AppIcon(icon: Icons.shopping_cart_outlined,),
                 ],
@@ -61,56 +77,72 @@ class PopularFoodDetail extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppColumn(text: "cold coofe",),
+                    AppColumn(text: product.name!,),
                     SizedBox(height: Dimensions.height20,),
                     BigText(text: "introduce"),
                     SizedBox(height: Dimensions.height20,),
-                    Expanded(child: SingleChildScrollView(child: ExpandableTextWidget(text: "Cold coffee is more than just a chilled beverage; it's a delightful symphony of robust coffee flavor and creamy indulgence, perfectly crafted to refresh and invigorate. Imagine the rich, aromatic notes of your favorite coffee beans, brewed to perfection and then expertly cooled, releasing a mellow sweetness and a smooth, velvety texture.Each sip offers a sophisticated blend of bitterness and sweetness, often complemented by the subtle nuances of milk or cream, and sometimes a hint of vanilla, chocolate, or caramel for an extra layer of complexity. Whether enjoyed over ice cubes clinking softly, or blended into a frosty, almost milkshake-like consistency, cold coffee delivers a satisfying chill that awakens the senses."))),
+                    Expanded(child: SingleChildScrollView(child: ExpandableTextWidget(text: product.description!))),
                   ],
                 ),
           )),
         ],
       ),
-      bottomNavigationBar: Container(
-      height: Dimensions.bottomHeightBar,
-        padding: EdgeInsets.only(top: Dimensions.height20,bottom: Dimensions.height20,left: Dimensions.width20,right: Dimensions.width20),
-        decoration: BoxDecoration(
-          color: AppColors.buttonBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(Dimensions.radius20*2),
-            topRight: Radius.circular(Dimensions.radius20*2)
-          )
-    ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: Dimensions.height20,bottom: Dimensions.height20,left: Dimensions.width20,right: Dimensions.width20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.radius20),
-              color: Colors.white
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.remove,color: Colors.black,),
-                SizedBox(width: Dimensions.width10/2,),
-                BigText(text: "0"),
-                SizedBox(width: Dimensions.width10/2,),
-                Icon(Icons.add,color: Colors.black,),
-              ],
-            ),
-        ),
-            Container(
-              padding: EdgeInsets.only(top: Dimensions.height20,bottom: Dimensions.height20,left: Dimensions.width20,right: Dimensions.width20),
-              child: BigText(text: "\₹100 | add to cart",color: Colors.white),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimensions.radius20),
-                color: AppColors.mainColor
+      bottomNavigationBar: GetBuilder<PopularProductController>(builder: (popularProduct){
+        return Container(
+          height: Dimensions.bottomHeightBar,
+          padding: EdgeInsets.only(top: Dimensions.height20,bottom: Dimensions.height20,left: Dimensions.width20,right: Dimensions.width20),
+          decoration: BoxDecoration(
+              color: AppColors.buttonBackgroundColor,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(Dimensions.radius20*2),
+                  topRight: Radius.circular(Dimensions.radius20*2)
+              )
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: Dimensions.height20,bottom: Dimensions.height20,left: Dimensions.width20,right: Dimensions.width20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Dimensions.radius20),
+                    color: Colors.white
+                ),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                            onTap: ()
+                            {
+                              popularProduct.setQuantity(false);
+                            },
+
+
+                        child: Icon(Icons.remove,color: Colors.black,)),
+                    SizedBox(width: Dimensions.width10/2,),
+                    BigText(text: popularProduct.quantity.toString()),
+                    SizedBox(width: Dimensions.width10/2,),
+                    GestureDetector(
+                        onTap: ()
+                        {
+                          popularProduct.setQuantity(true);
+                        },
+                        child: Icon(Icons.add,color: Colors.black,)),
+                  ],
+                ),
               ),
-            )
-      ],
-      ),
-    ),
+              Container(
+                padding: EdgeInsets.only(top: Dimensions.height20,bottom: Dimensions.height20,left: Dimensions.width20,right: Dimensions.width20),
+                child: BigText(text: "\₹${product.price}  | add to cart",color: Colors.white),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Dimensions.radius20),
+                    color: AppColors.mainColor
+                ),
+              )
+            ],
+          ),
+        );
+
+      }),
+
     );
   }
 }
