@@ -2,13 +2,16 @@ import 'package:fd4u/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../data/repository/popular_product_repo.dart';
+import '../models/cart_model.dart';
 import '../utils/colors.dart';
+import 'cart_controller.dart';
 
  class PopularProductController extends GetxController{
    final PopularProductRepo popularProductRepo;
   PopularProductController({required this.popularProductRepo});
   List<ProductModel> _popularProductList=[];
   List<ProductModel> get popularProductList=>_popularProductList;
+  late CartController _cart=Get.find<CartController>();
   bool _isLoaded=false;
   bool get isLoaded=>_isLoaded;
   int _quantity=0;
@@ -76,11 +79,44 @@ import '../utils/colors.dart';
 
    }
 
-   void initProduct()
+   void initProduct(ProductModel product,CartController cart)
    {
      _quantity=0;
      _inCartItems=0;
+     _cart=cart;
+     var exist=false;
+     exist = _cart.existInCart(product);
+     //if exits
+     //get from storage _inCartItems=3
+     if(exist)
+     {
+       _inCartItems=cart.getQuantity(product);
+     }
+   }
 
+   void addItem(ProductModel product)
+   {
+     if(_quantity>0)
+     {
+       _cart.addItem(product, _quantity);
+
+       _quantity=0;
+       _inCartItems=_cart.getQuantity(product);
+
+     }
+     update();
+
+   }
+
+   int get totalItems
+   {
+     return _cart.totalItems;
+
+   }
+
+   List<CartModel> get getItems
+   {
+     return _cart.getItems;
    }
 
  }

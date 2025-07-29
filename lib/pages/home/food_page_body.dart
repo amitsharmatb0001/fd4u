@@ -41,6 +41,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   @override
   void dispose(){
     pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -132,11 +133,11 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           return recommendedProduct.isLoaded?ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: recommendedProduct.RecommendedProductList.length,
+              itemCount: recommendedProduct.recommendedProductList.length,
               itemBuilder: (context, index){
                 return GestureDetector(
                   onTap: (){
-                    Get.toNamed(RouteHelper.getRecommendedFood(index));
+                    Get.toNamed(RouteHelper.getRecommendedFood(index, "home"));
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: Dimensions.width20,right: Dimensions.width20,bottom: Dimensions.height10),
@@ -152,7 +153,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                        AppConstants.BASE_URL+AppConstants.UPLOAD_URL+recommendedProduct.RecommendedProductList[index].img!
+                                        AppConstants.BASE_URL+AppConstants.UPLOAD_URL+recommendedProduct.recommendedProductList[index].img!
                                     )
                                 )
                             ),
@@ -176,7 +177,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    BigText(text: recommendedProduct.RecommendedProductList[index].name!),
+                                    BigText(text: recommendedProduct.recommendedProductList[index].name!),
                                     SizedBox(height: Dimensions.height10,),
                                     SmallText(text: "with ice cream"),
                                     SizedBox(height: Dimensions.height10,),
@@ -247,7 +248,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
             onTap: (){
 
-              Get.toNamed(RouteHelper.getPopularFood(index));
+              Get.toNamed(RouteHelper.getPopularFood(index,"home"));
             },
 
             child: Container(
